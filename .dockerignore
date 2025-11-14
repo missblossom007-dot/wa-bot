@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+*.md
+.env
+_IGNORE_*
+*.png
+qr_code_*.png
+qr-*.png
+qrcode.png
