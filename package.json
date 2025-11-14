@@ -5,7 +5,8 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "dev": "PORT=3000 node bot.js"
+    "dev": "PORT=3000 node bot.js",
+    "test": "node test-qr-server.js"
   },
   "keywords": [
     "whatsapp",
@@ -18,6 +19,7 @@
     "@open-wa/wa-automate": "^4.76.0",
     "axios": "^1.13.2",
     "googleapis": "^165.0.0",
+    "qrcode": "^1.5.4",
     "yahoo-finance2": "^3.10.1"
   }
 }
