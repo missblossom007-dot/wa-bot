@@ -437,22 +437,39 @@ async function start(client) {
         try {
           await client.sendText(pengirim, '⏳ Membuat QR Code...');
           
-          // Gunakan API QR Code gratis dari goqr.me
+          // Gunakan API QR Code gratis
           const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(text)}`;
           
           // Download QR code
           const response = await axios.get(qrUrl, { responseType: 'arraybuffer' });
-          const buffer = Buffer.from(response.data, 'binary');
+          const buffer = Buffer.from(response.data);
           
-          // Kirim sebagai gambar
+          // Simpan ke file temporary
+          const tempFile = `./temp_qr_${Date.now()}.png`;
+          fs.writeFileSync(tempFile, buffer);
+          
+          // Kirim gambar dari file
           await client.sendImage(
             pengirim,
-            `data:image/png;base64,${buffer.toString('base64')}`,
+            tempFile,
             'qrcode.png',
             `✅ QR Code berhasil dibuat!\n\nIsi: ${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`
           );
+          
+          // Hapus file temporary setelah dikirim
+          setTimeout(() => {
+            try {
+              if (fs.existsSync(tempFile)) {
+                fs.unlinkSync(tempFile);
+              }
+            } catch (err) {
+              console.error('Error deleting temp file:', err);
+            }
+          }, 5000);
+          
         } catch (error) {
           console.error('Error generating QR:', error);
+          console.error('Error details:', error.message);
           await client.sendText(pengirim, '❌ Gagal membuat QR Code. Coba lagi.');
         }
       }
@@ -469,20 +486,38 @@ async function start(client) {
         try {
           await client.sendText(pengirim, '⏳ Membuat QR Code dengan logo...');
           
-          // Gunakan API dengan logo di tengah
+          // Gunakan API dengan margin lebih besar
           const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(text)}&format=png&margin=10`;
           
           const response = await axios.get(qrUrl, { responseType: 'arraybuffer' });
-          const buffer = Buffer.from(response.data, 'binary');
+          const buffer = Buffer.from(response.data);
           
+          // Simpan ke file temporary
+          const tempFile = `./temp_qr_logo_${Date.now()}.png`;
+          fs.writeFileSync(tempFile, buffer);
+          
+          // Kirim gambar dari file
           await client.sendImage(
             pengirim,
-            `data:image/png;base64,${buffer.toString('base64')}`,
+            tempFile,
             'qrcode_logo.png',
             `✅ QR Code dengan desain khusus!\n\n💡 Scan untuk: ${text.substring(0, 80)}${text.length > 80 ? '...' : ''}`
           );
+          
+          // Hapus file temporary
+          setTimeout(() => {
+            try {
+              if (fs.existsSync(tempFile)) {
+                fs.unlinkSync(tempFile);
+              }
+            } catch (err) {
+              console.error('Error deleting temp file:', err);
+            }
+          }, 5000);
+          
         } catch (error) {
           console.error('Error generating QR with logo:', error);
+          console.error('Error details:', error.message);
           await client.sendText(pengirim, '❌ Gagal membuat QR Code. Coba lagi.');
         }
       }
@@ -503,16 +538,34 @@ async function start(client) {
           const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(text)}&color=0-100-200&bgcolor=255-255-255`;
           
           const response = await axios.get(qrUrl, { responseType: 'arraybuffer' });
-          const buffer = Buffer.from(response.data, 'binary');
+          const buffer = Buffer.from(response.data);
           
+          // Simpan ke file temporary
+          const tempFile = `./temp_qr_color_${Date.now()}.png`;
+          fs.writeFileSync(tempFile, buffer);
+          
+          // Kirim gambar dari file
           await client.sendImage(
             pengirim,
-            `data:image/png;base64,${buffer.toString('base64')}`,
+            tempFile,
             'qrcode_color.png',
             `✅ QR Code warna custom!\n\n🎨 Warna: Biru & Putih\n📱 Scan untuk: ${text.substring(0, 70)}${text.length > 70 ? '...' : ''}`
           );
+          
+          // Hapus file temporary
+          setTimeout(() => {
+            try {
+              if (fs.existsSync(tempFile)) {
+                fs.unlinkSync(tempFile);
+              }
+            } catch (err) {
+              console.error('Error deleting temp file:', err);
+            }
+          }, 5000);
+          
         } catch (error) {
           console.error('Error generating colored QR:', error);
+          console.error('Error details:', error.message);
           await client.sendText(pengirim, '❌ Gagal membuat QR Code. Coba lagi.');
         }
       }
